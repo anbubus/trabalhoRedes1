@@ -5,7 +5,10 @@ import json
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "8jUCWYBssHyW72CkhmEWOw"
 
-currentUser = " ";
+if __name__ == '__main__':
+    app.run(host = "127.0.0.1", port = 8000, debug=True)
+
+currentUser = " "
 
 @app.route("/", methods = ["POST", "GET"])
 def home():   
@@ -98,3 +101,4 @@ def enviar_mensagem():
     
     
     return render_template('messages.html', currentUser = currentUser, msgs = msgs)
+

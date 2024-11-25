@@ -245,7 +245,7 @@ def start_server(host, port):
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    parser.add_argument('--host', default='127.10.10.1', type=str)
+    parser.add_argument('--host', default='127.0.0.1', type=str)
     parser.add_argument('--port', default=5000, type=int)
     args = parser.parse_args()
     start_server(args.host, args.port)

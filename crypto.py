@@ -9,7 +9,7 @@ KEY = base64.urlsafe_b64encode(hashlib.sha256(b'qweasd').digest())
 cipher_suite = Fernet(KEY)
 
 # Função que estabelece conexão com o servidor, envia dados criptografados e recebe uma resposta criptografada
-def enviar_dados(data, host='127.10.10.1', port=5000):
+def enviar_dados(data, host='127.0.0.1', port=5000):
     try:
         # Cria um socket TCP
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:

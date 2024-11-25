@@ -5,10 +5,7 @@ import json
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "8jUCWYBssHyW72CkhmEWOw"
 
-if __name__ == '__main__':
-    app.run(host = "127.0.0.1", port = 8000, debug=True)
-
-currentUser = " "
+currentUser = " ";
 
 @app.route("/", methods = ["POST", "GET"])
 def home():   
@@ -81,24 +78,24 @@ def enviar_mensagem():
     currentUser = request.args.get('currentUser')
     if request.method == 'POST':
         data = request.form
-        remetente = data.get("remetente")
+        remetente = currentUser
         destinatario = data.get("destinatario")
-        conteudo_email = data.get("messageInput")
+        conteudo_email = request.form.get('messageInput')
+        if conteudo_email:
+            dados = {"Flag": 1, "User": remetente, "Destinatario": destinatario, "Mensagem": conteudo_email}
+            print(dados)
+            response = enviar_dados(dados)
 
-        dados = {"Flag": 1, "User": remetente, "Destinatario": destinatario, "Mensagem": conteudo_email}
-        response = enviar_dados(dados)
-
-        print(response)
+            print(response)
         
-        if (response):
-            
-            return render_template('messages.html', currentUser = currentUser, msgs = msgs)
-            
-        else:
-            flash('Error. Try again.', category='error')
-            return render_template('messages.html', currentUser = currentUser, msgs = msgs)
-    
+            if (response):
+                
+                return render_template('messages.html', currentUser = currentUser, msgs = msgs)
+                
+            else:
+                flash('Error. Try again.', category='error')
+                return render_template('messages.html', currentUser = currentUser, msgs = msgs)
+        
     
     
     return render_template('messages.html', currentUser = currentUser, msgs = msgs)
-

@@ -1,0 +1,35 @@
+<!-- A maior parte da formatação do site foi feita com Bulma -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    <title>Chat - Redes</title>
+</head>
+<body>
+<section class="hero is-small">
+    <div class="container hero-body">
+      <a href="\" class="title">CHAT - Redes</a>
+      <a href="\" class="subtitle">Faça seu cadatro na plataforma!</a>
+    </div>
+</section>
+
+<div class="box container is-max-desktop is-flex is-justify-content-end" 
+     style="background-image: url(/static/images/chat_background.png); height:39rem; overflow-y: auto">
+    
+    <div id="messageChatArea" class="messageArea is-justify-content-end is-align-items-end">
+      <!-- aqui vai entrar a div das mensagens -->
+    </div>
+    <div class="container is-flex is-align-self-center is-justify-content-center">
+    <form method="post">
+      <p class="is-flex is-justify-content-center title" style="text-shadow: 0.3rem 0rem 0.2rem black">CADASTRO</p>
+      <input type="text" name="User" id="user" class="input is-rounded mt-4" placeholder="Nome de usuário">
+      <input type="text" name="Pass" id="password" class="input is-rounded mt-4" placeholder="Senha">
+      <button type="submit" id="sendButton" class="button is-rounded mt-4">Send</button>
+    </form>
+  </div>
+
+</div>
+</body>
+</html>

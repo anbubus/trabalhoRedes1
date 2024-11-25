@@ -1,0 +1,37 @@
+<!-- A maior parte da formatação do site foi feita com Bulma -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    <title>Chat - Redes</title>
+</head>
+<body>
+<section class="hero is-small">
+    <div class="container hero-body">
+      <a href="\" class="title">CHAT - Redes</a>
+      <a href="\" class="subtitle">Mande mensagens para o servidor e se comunique com outros clientes</a>
+    </div>
+</section>
+
+<div class="box container is-max-desktop is-flex is-justify-content-end" 
+     style="background-image: url(/static/images/chat_background.png); height:39rem; overflow-y: auto">
+    
+    <div id="messageChatArea" class="messageArea is-justify-content-end is-align-items-end">
+      <!-- aqui vai entrar a div das mensagens -->
+    </div>
+  <div class="container is-flex is-align-self-center is-justify-content-center">
+    <div>
+      <p class="is-flex is-justify-content-center title" style="text-shadow: 0.3rem 0rem 0.2rem black">Escolha uma das opções</p>
+      <p class="informationModal is-flex is-justify-content-center is-size-5 has-text-weight-bold" style="color: white; text-shadow: 0.3rem 0rem 0.2rem black;">1 - Criar usuário <br> 2 - Autenticar usuário <br> 3 - Enviar mensagens <br> 0 - Sair</p>
+    </div>
+  </div>
+    <form method="POST" class="is-flex is-absolute mt-6" style="position: fixed; bottom: 8%; right: 20%; width: 58rem">
+      <input type="text" name="optionsInput" id="optionsInput" class="input is-rounded mr-2" placeholder="Escolha uma opção...">
+      <button type="submit" id="sendButton" class="button is-rounded">Send</button>
+    </form>
+</div>
+</div>
+</body>
+</html>

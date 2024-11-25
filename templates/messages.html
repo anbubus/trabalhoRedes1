@@ -1,0 +1,189 @@
+<!-- A maior parte da formatação do site foi feita com Bulma -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    <title>Chat - Redes</title>
+</head>
+<body>
+<section class="hero is-small">
+    <div class="container hero-body">
+      <a href="\" class="title">CHAT - Redes</a>
+      <a href="\" class="subtitle">Mande mensagens para o servidor e se comunique com outros clientes</a>
+    </div>
+</section>
+
+<div class="box container is-max-desktop is-flex is-justify-content-end" 
+     style="background-image: url(/static/images/chat_background.png); height:39rem; overflow-y: auto">
+    
+    <div id="messageChatArea" class="messageArea is-justify-content-end is-align-items-end">
+      <!-- aqui vai entrar a div das mensagens -->
+      {% if msgs %}
+        {% for msg in msgs %}
+            <div class="messageContent is-flex is-align-items-center">
+              <div class="control notification is-small">
+                <div id="msg-{{ msg.id }}">{{ msg.id }} </div>
+                  <p>{{ msg.Mensagem }}</p>
+                 
+              </div>
+              <div class="imageContent is-flex is-justify-content-flex-end ml-4">
+                  <figure class="image is-48x48 is-flex">
+                      <img class="userImage is-rounded" src="/images/generic_user.jpg"/>
+                  </figure>
+              </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+    <form  id = "fomrmesage" method="post" class="is-flex is-absolute mt-6" style="position: fixed; top: 11%; left: 20%; width: 27rem">
+      <input type="text" name="remetente" id="userInput" class="input is-rounded mr-2" value="{{ currentUser }}" disabled>
+      <div class="container"> 
+        <input type="text" name="destinatario" id="destInput" class="input is-rounded mr-2" placeholder="destinatário">
+        <div class = "select">
+          <select id="contatos" onchange="optionSelected(this)"><option>Contatos</option></select>
+          <input type="button" class="button input is-rounded mr-2" value = "enter" onclick="agenda()">
+        </div>
+      </div>
+      
+    </div>
+    <div class="is-flex is-absolute mt-6" style="position: fixed; bottom: 8%; right: 20%; width: 58rem">
+      <input type="text" name="messageInput" id="messageInput" class="input is-rounded mr-2" placeholder="...">
+      <button type="submit" id="sendButton" class="button is-rounded">Send</button>
+    </div>
+    </form>
+</div>
+</div>
+
+
+<script>
+  var id_msgs = 0;
+  var id_contact = 0;
+  var time = 0;
+  var contacts = [];
+  var msgs = []; 
+
+  window.onload = ()=>{
+
+    var select = document.getElementById('contatos');
+    
+
+    console.log(localStorage.getItem('age'));
+    if(localStorage.getItem('age')!=null)
+    {
+      contacts=JSON.parse(localStorage.getItem('age'));
+    }
+
+    if(contacts){
+      contacts.forEach((element) => {
+        if (element){
+        var opt = document.createElement('option');
+        opt.textContent = element.id_contact;
+        opt.innerHTML = element.id_contact;
+        select.appendChild(opt);
+        console.log("ebaa");
+        id_contact++;
+      }
+      });
+
+      if(localStorage.getItem('mes')){
+        msgs = JSON.parse(localStorage.getItem('mes'));
+      }
+      if(msgs){
+        
+          msgs.forEach((message)=>{
+            const userMessageDiv = document.createElement('div');
+            userMessageDiv.classList.add('userMessage', 'is-flex', 'has-text-right', 'is-justify-content-end');
+
+            userMessageDiv.innerHTML = `
+                <div class="messageContent is-flex is-align-items-center">
+                    <div class="control notification is-small">
+                        <p>${message.text}</p>
+                        <div id="msg-${message.id}">${message.time}</div>
+                    </div>
+                    <div class="imageContent is-flex is-justify-content-flex-end ml-4">
+                        <figure class="image is-48x48 is-flex">
+                            <img class="userImage is-rounded" src="/images/generic_user.jpg"/>
+                        </figure>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('messageChatArea').appendChild(userMessageDiv);
+            
+          id_msgs++;
+        })
+      }
+  }
+  
+  
+  }
+  function optionSelected(element){ //adicionando uma função para assim que selecionado o contato atualizar o destinatário
+    var selected = element.value;
+    if(selected!="Contatos"){
+      document.getElementById('destInput').value = selected;
+    }
+  }
+ 
+  function agenda(){ //funcao para atualizar a agenda de contatos
+    var select = document.getElementById('contatos');
+    var opt = document.createElement('option');
+    opt.textContent = document.getElementById('destInput').value;
+    opt.innerHTML = document.getElementById('destInput').value;
+    select.appendChild(opt);
+    contacts.push({id_contact:opt.value});
+    console.log(contacts);
+    localStorage.setItem('age', JSON.stringify(contacts));
+    id_contact++;
+    
+  }
+   // função para pegar a hora e os minutos atuais e adicionar na div com a class current-time
+  function updateTime() {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, '0'); // Ensures 2-digit format
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const currentTime = `${hours}:${minutes}`;
+
+    document.getElementById(id_msgs).innerText = currentTime;
+    return currentTime;
+  }
+  // função para adicionar as mensagens no chat
+  function addMessage() {
+  // pegar o valor/o que foi escrito no input
+  const messageText = document.getElementById('messageInput').value;
+
+  // Se o input não tiver vazio
+  if (messageText.trim() !== '') {
+      // Cria a estrutura HTML que será adicionada
+      const userMessageDiv = document.createElement('div');
+      userMessageDiv.classList.add('userMessage', 'is-flex', 'has-text-right', 'is-justify-content-end');
+
+      userMessageDiv.innerHTML = `<div class="messageContent is-flex is-align-items-center"><div class="control notification is-small"><p>${messageText}</p><div id=${id_msgs}></div></div><div class="imageContent is-flex is-justify-content-flex-end ml-4"><figure class="image is-48x48 is-flex"><img class="userImage is-rounded" src="/images/generic_user.jpg"/></figure></div></div>`;
+
+      // Adiciona a div criada na área do chat
+      document.getElementById('messageChatArea').appendChild(userMessageDiv);
+
+      // Limpa o input para novas mensagens
+      document.getElementById('messageInput').value = '';
+
+      // Adiciona o tempo atual na mensagem
+      time = updateTime();
+
+      msgs.push({id:id_msgs, text:messageText, time:time});
+      console.log(msgs);
+      localStorage.setItem('mes', JSON.stringify(msgs));
+      id_msgs++;
+    }
+    
+  }
+
+  document.getElementById('sendButton').addEventListener('click', addMessage);
+  document.getElementById('messageInput').addEventListener("keypress", function(event) {
+          if (event.key === "Enter") {
+              addMessage();
+          }})
+</script>
+
+</body>
+</html>

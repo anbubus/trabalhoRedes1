@@ -11,41 +11,45 @@
 <section class="hero is-small">
     <div class="container hero-body">
       <a href="\" class="title">CHAT - Redes</a>
+      <div>
       <a href="\" class="subtitle">Mande mensagens para o servidor e se comunique com outros clientes</a>
+    </div>
     </div>
 </section>
 
-<div class="box container is-max-desktop is-flex" 
+<div class="box container is-max-desktop is-flex pt-6 pb-6" 
      style="background-image: url(/static/images/chat_background.png); height:39rem; overflow-y: auto">
+     <div class="container">
      {% if msgs %}
         {% for msg in msgs %}
+        <div class="imageContent is-flex is-justify-content-start mt-4">
             <div class="messageContent is-flex is-align-items-center is-justify-content-start">
-              <div class="control notification is-small">
-                <div id="msg-{{ msg.id }} " class="box has-background-grey has-text-black"><p>{{ msg.id }}</p> </div>
+              <figure class="image is-32x32 is-flex">
+                <img class="userImage is-rounded" src="/static/images/generic_user.png"/>
+            </figure>
+        </div>
+              <div class="control notification is-small ml-4">
+                <div id="msg-{{ msg.id }} " class=""><p><u><i><strong>{{ msg.id }}</strong></i></u></p></div>
                   <p>{{ msg.Mensagem }}</p>
                  
-              </div>
-              <div class="imageContent is-flex is-justify-content-flex-end ml-4">
-                  <figure class="image is-48x48 is-flex">
-                      <img class="userImage is-rounded" src="/images/generic_user.jpg"/>
-                  </figure>
               </div>
           </div>
         {% endfor %}
       {% endif %}
+    </div>
     <div class="container is-flex is-justify-content-end">
       <div id="messageChatArea" class="messageArea is-justify-content-end is-align-items-end">
         <!-- aqui vai entrar a div das mensagens -->
       
       </div>
     </div>
-    <form method="post" class="is-flex is-absolute mt-6" style="position: fixed; top: 11%; left: 20%; width: 27rem">
-      <input type="text" name="remetente" id="userInput" class="input is-rounded mr-2" value="{{ currentUser }}" disabled>
-      <div class="container"> 
-        <input type="text" name="destinatario" id="destInput" class="input is-rounded mr-2" placeholder="destinatário">
-        <div class = "select">
+    <form method="post" class="is-flex is-absolute mt-6" style="position: fixed; top: 9%; left: 20%;">
+      <input type="text" name="remetente" id="userInput" class="input is-rounded mr-2" style="width: 10rem;" value="{{ currentUser }}" disabled>
+      <div class="container is-flex"> 
+        <input type="text" name="destinatario" id="destInput" class="input is-rounded mr-2" style="width: 10rem;" placeholder="destinatário">
+        <div class = "is-flex select">
           <select id="contatos" onchange="optionSelected(this)"><option>Contatos</option></select>
-          <input type="button" class="button input is-rounded mr-2" value = "enter" onclick="agenda()">
+          <input type="button" class="button input is-rounded ml-2" value = "enter" onclick="agenda()">
         </div>
       </div>
       <div class="is-flex is-absolute mt-6" style="position: fixed; bottom: 8%; right: 20%; width: 58rem">
@@ -93,25 +97,27 @@
         msgs = JSON.parse(localStorage.getItem('mes'));
       }
       if(msgs){
-        
+        console.log(msgs);
           msgs.forEach((message)=>{
             const userMessageDiv = document.createElement('div');
             userMessageDiv.classList.add('userMessage', 'is-flex', 'has-text-right', 'is-justify-content-end');
-
-            userMessageDiv.innerHTML = `
-                <div class="messageContent is-flex is-align-items-center is-justify-content-end">
-                    <div class="control notification is-small">
-                        <p>${message.text}</p>
-                        <div id="msg-${message.id}">${message.time}</div>
-                    </div>
-                    <div class="imageContent is-flex is-justify-content-flex-end ml-4">
-                        <figure class="image is-48x48 is-flex">
-                            <img class="userImage is-rounded" src="/images/generic_user.jpg"/>
-                        </figure>
-                    </div>
-                </div>
-            `;
-
+            console.log("Hey");
+            current_user = document.getElementById('userInput').value;
+            if(current_user==message.user){
+              userMessageDiv.innerHTML = `
+                  <div class="messageContent is-flex is-align-items-center is-justify-content-end">
+                      <div class="control notification is-small">
+                          <p>${message.text}</p>
+                          <div id="msg-${message.id}">${message.time}</div>
+                      </div>
+                      <div class="imageContent is-flex is-justify-content-flex-end ml-4">
+                          <figure class="image is-32x32 is-flex">
+                              <img class="userImage is-rounded" src="/static/images/generic_user.png"/>
+                          </figure>
+                      </div>
+                  </div>
+              `;
+                }
             document.getElementById('messageChatArea').appendChild(userMessageDiv);
             
           id_msgs++;
@@ -131,13 +137,16 @@
   function agenda(){ //funcao para atualizar a agenda de contatos
     var select = document.getElementById('contatos');
     var opt = document.createElement('option');
-    opt.textContent = document.getElementById('destInput').value;
-    opt.innerHTML = document.getElementById('destInput').value;
-    select.appendChild(opt);
-    contacts.push({id_contact:opt.value});
-    console.log(contacts);
-    localStorage.setItem('age', JSON.stringify(contacts));
-    id_contact++;
+    inputcontact = document.getElementById('destInput').value;
+    if (inputcontact!=""){
+      opt.textContent = inputcontact;
+      opt.innerHTML = inputcontact;
+      select.appendChild(opt);
+      contacts.push({id_contact:opt.value});
+      console.log(contacts);
+      localStorage.setItem('age', JSON.stringify(contacts));
+      id_contact++;
+    }
     
   }
    // função para pegar a hora e os minutos atuais e adicionar na div com a class current-time
@@ -165,14 +174,14 @@
 
       // Adiciona a div criada na área do chat
       document.getElementById('messageChatArea').appendChild(userMessageDiv);
-
+      current_user = document.getElementById('userInput').value;
       // Limpa o input para novas mensagens
       //document.getElementById('messageInput').value = '';
 
       // Adiciona o tempo atual na mensagem
       time = updateTime();
 
-      msgs.push({id:id_msgs, text:messageText, time:time});
+      msgs.push({id:id_msgs, user:current_user, text:messageText, time:time});
       console.log(msgs);
       localStorage.setItem('mes', JSON.stringify(msgs));
       id_msgs++;

@@ -17,7 +17,8 @@ def home():
             elif msg == '2':
                 return redirect("/login")
             elif msg == '3':
-                return redirect("/messages")
+                print("Você precisa fazer login primeiro")
+                return redirect("/login")
             elif msg == '0':
                 return redirect("/")
             else:
@@ -32,7 +33,7 @@ def criar_usuario():
         data = request.form
         nickname = data.get("User")
         senha = data.get("Pass")
-        dados = {"Flag": 3, "User": nickname, "Pass": senha}
+        dados = {"flag": 3, "User": nickname, "Pass": senha}
 
         response = enviar_dados(dados)
         print(response)
@@ -52,14 +53,14 @@ def autenticar_usuario():
         data = request.form
         nickname = data.get("User")
         senha = data.get("Pass")
-        dados = {"Flag": 0, "User": nickname, "Pass": senha}
+        dados = {"flag": 0, "User": nickname, "Pass": senha}
 
         response = enviar_dados(dados)
         print(response)
 
         if (response):
             currentUser = nickname
-            return redirect(url_for("enviar_mensagem", currentUser = currentUser))
+            return redirect(url_for("enviar_mensagem", currentUser = currentUser, mensagens = response))
         else:
             flash('Error. Cant authenticate. Try again.', category='error')
             return render_template('login.html')
@@ -70,10 +71,10 @@ def autenticar_usuario():
 
 @app.route("/messages", methods=['POST', 'GET'])
 def enviar_mensagem():
-    dados = {"Flag": 2}
+    dados = {"flag": 1}
     #msgs = enviar_dados(dados)
     data = enviar_dados(dados)
-    msgs = data["success"]
+    msgs = data
     print(msgs)
     currentUser = request.args.get('currentUser')
     if request.method == 'POST':
@@ -82,7 +83,7 @@ def enviar_mensagem():
         destinatario = data.get("destinatario")
         conteudo_email = request.form.get('messageInput')
         if conteudo_email:
-            dados = {"Flag": 1, "User": remetente, "Destinatario": destinatario, "Mensagem": conteudo_email}
+            dados = {"flag": 1, "User": remetente, "destinatario": destinatario, "conteudo_email": conteudo_email}
             print(dados)
             response = enviar_dados(dados)
 
